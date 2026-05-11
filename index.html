@@ -1,51 +1,22 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html>
+<head> <meta charset="UTF-8">
+<title>もぐTube</title> 
+<link rel="stylesheet" href="style.css">
+</head>  
 
-<head>
-<meta charset="UTF-8">
-<title>もぐTube</title>
+<body> 
+  
+<div class="header">もぐTube</div> 
 
-<style>
-
-html,body{
-margin:0;
-width:100%;
-height:100%;
-background:#111;
-overflow:hidden;
-font-family:Arial;
-}
-
-.header{
-height:60px;
-background:#202020;
-color:white;
-display:flex;
-align-items:center;
-padding-left:20px;
-font-size:30px;
-font-weight:bold;
-}
-
-iframe{
-width:100%;
-height:calc(100% - 60px);
-border:none;
-}
-
-</style>
-</head>
-
-<body>
-
-<div class="header">
-もぐTube
-</div>
-
-<iframe
-src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-allowfullscreen>
-</iframe>
-
-</body>
+<div class="container">   
+  <div class="player">   
+    <iframe id="player"     
+    src="https://www.youtube.com/embed/dQw4w9WgXcQ"    
+    allowfullscreen></iframe>   
+  </div>   
+  <div class="sidebar" id="list"></div> 
+</div>  
+<script src="app.js"></script> 
+</body> 
 </html>
