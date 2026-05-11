@@ -4,169 +4,235 @@
 <meta charset="UTF-8"> 
 <title>もぐTube</title>  
 
-<style> 
+<style>  
 body{   
   margin:0;   
   background:#0f0f0f;   
   color:white;   
-  font-family:Arial; 
+  font-family:Arial, sans-serif; 
 }  
-
-  .header{   
+  
+  /* 上バー */ 
+  .topbar{   
     height:56px;   
     background:#202020;   
     display:flex;   
     align-items:center;   
     padding:0 16px;   
+    position:fixed;   
+    width:100%;   
+    top:0;   
+    z-index:100;   
+    box-sizing:border-box; 
+  }  
+  .logo{   
     font-size:22px;   
-    font-weight:bold; 
+    font-weight:bold;   
+    color:red;   
+    margin-right:20px; 
   }  
   
-  .search-bar{   
-    display:flex;   
-    padding:10px;   
-    background:#181818; 
-  }  
-  
-  .search-bar input{   
+  .search{   
     flex:1;   
-    padding:10px;   
+    display:flex; 
+  }  
+  
+  .search input{   
+    flex:1;   
+    height:38px;   
     background:#121212;   
-    border:none;   
+    border:1px solid #303030;   
     color:white;   
+    padding:0 12px;   
     font-size:16px; 
   }  
   
-  .search-bar button{   
-    padding:10px 16px;   
-    border:none;   
-    background:red;   
+  .search button{   
+    width:60px;   
+    background:#222;   
+    border:1px solid #303030;   
     color:white;   
     cursor:pointer; 
   }  
   
-  .container{   
-    display:flex;   
-    height:calc(100vh - 112px); 
+  /* サイドバー */ 
+  .sidebar{   
+    position:fixed;   
+    top:56px;   
+    left:0;   
+    width:220px;   
+    height:100%;   
+    background:#0f0f0f;   
+    padding-top:10px;   
+    border-right:1px solid #222; 
   }  
   
+  .side-item{   
+    padding:12px 24px;   
+    cursor:pointer; 
+  }  
+  
+  .side-item:hover{   
+    background:#272727; 
+  }  
+  
+  /* メイン */ 
+  .main{   
+    margin-left:220px;   
+    margin-top:56px;   
+    padding:20px; 
+  }  
+  
+  /* プレイヤー */ 
   .player{   
-    flex:2;   
-    padding:10px; 
+    width:100%;   
+    aspect-ratio:16/9;   
+    margin-bottom:20px; 
   }  
   
   iframe{   
     width:100%;   
     height:100%;   
-    border:none; 
+    border:none;   
+    border-radius:12px; 
   }  
   
-  .sidebar{   
-    flex:1;   
-    overflow-y:auto;   
-    padding:10px; 
+  /* 動画一覧 */ 
+  .videos{   
+    display:grid;   
+    grid-template-columns:     
+      repeat(auto-fill,minmax(320px,1fr));   
+    gap:20px; 
   }  
   
   .video{   
-    display:flex;   
-    gap:10px;   
-    background:#181818;   
-    margin-bottom:10px;   
-    padding:6px;   
-    border-radius:6px;   
     cursor:pointer; 
   }  
   
   .video img{   
-    width:140px;   
-    border-radius:6px; 
+    width:100%;   
+    border-radius:12px; 
   }  
   
   .video-title{   
-    font-size:14px; 
-  } 
-  </style> 
-  </head>  
+    margin-top:8px;   
+    font-size:15px;   
+    line-height:1.4; 
+  }  
+  
+  .video:hover{   
+    transform:scale(1.02);   
+    transition:0.2s; 
+  }  
+
+　</style> 
+　</head>  
   
   <body>  
   
-  <div class="header"> 
-  もぐTube 
-  </div>   
+  <div class="topbar">    
+    
+    <div class="logo">     
+      もぐTube   
+    </div>    
+    
+    <div class="search">     
+      <input       
+        id="searchInput"       
+        placeholder="検索">      
+      
+      <button onclick="searchVideos()">       
+        🔍     
+      </button>   
+    </div>  
   
-  <div class="search-bar">   
-    <input     
-      id="searchInput"     
-      placeholder="YouTube検索">   
-    <button onclick="searchVideos()">     
-      検索   
-    </button> 
   </div>  
     
-    <div class="container">    
-      
-      <div class="player">     
-        <iframe       
-          id="player"       
-          src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-          allowfullscreen>     
-        </iframe>   
-      </div>    
-      
-      <div class="sidebar" id="sidebar"></div>  
+  <div class="sidebar">    
     
-    </div>  
-    
-    <script>  
-      
-      const API_KEY = "AIzaSyB-_3Q0nPbaJqNUaIMNpakZ1loFDbyZwIQ";  
-      
-      function searchVideos(){    
-        
-        const query =     
-          document.getElementById("searchInput").value;    
-        
-        if(!query) return;    
-        
-        fetch(     
-          `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=10&q=${query}&key=${API_KEY}`   
-        )   
-        .then(res => res.json())   
-        .then(data => {      
-          
-          const sidebar =       
-            document.getElementById("sidebar");      
-          
-          sidebar.innerHTML = "";      
-          
-          data.items.forEach(v => {        
-            
-            const videoId = v.id.videoId;       
-            const title = v.snippet.title;        
-            const div =         
-              document.createElement("div");        
-            
-            div.className = "video";        
-            
-            div.innerHTML = `         
-              <img src="https://img.youtube.com/vi/${videoId}/mqdefault.jpg">         
-              <div class="video-title">${title}</div>       
-            `;        
-            div.onclick = () => {          
-              
-              document.getElementById("player").src =           
-                "https://www.youtube.com/embed/" + videoId;        
-            };        
-            
-            sidebar.appendChild(div);      
-          
-          });    
-        
-        });  
-      
-      }  
-    
-    </script>  
+    <div class="side-item">🏠 ホーム</div>   
+    <div class="side-item">🔥 急上昇</div>   
+    <div class="side-item">🎵 音楽</div>   
+    <div class="side-item">🎮 ゲーム</div>   
+    <div class="side-item">📺 登録チャンネル</div>  
   
+  </div>  
+  
+    <div class="main">    
+    
+    <div class="player">      
+      
+      <iframe       
+        id="player"       
+        src="https://www.youtube.com/embed/dQw4w9WgXcQ"       
+        allowfullscreen>     
+      </iframe>    
+    
+    </div>    
+    
+    <div class="videos" id="videos"></div>  
+    
+  </div>  
+  <script>  
+  
+  const API_KEY = "ここにYouTubeAPIキー";  
+  
+  function searchVideos(){    
+    
+    const query =     
+      document.getElementById("searchInput").value;    
+    
+    if(!query) return;    
+    
+    fetch(     
+      `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=20&q=${query}&key=${API_KEY}`   
+    )   
+    .then(res => res.json())   
+    .then(data => {      
+      
+      const videos =       
+        document.getElementById("videos");     
+      
+      videos.innerHTML = "";      
+      
+      data.items.forEach(v => {        
+        
+        const id = v.id.videoId;       
+        const title = v.snippet.title;        
+        
+        const div =         
+          document.createElement("div");        
+        
+        div.className = "video";        
+        
+        div.innerHTML = `         
+        　<img src="https://img.youtube.com/vi/${id}/mqdefault.jpg">         
+         <div class="video-title">${title}</div>       
+        `;        
+        
+        div.onclick = () => {          
+          
+          document.getElementById("player").src =           
+            "https://www.youtube.com/embed/" + id;          
+          
+          window.scrollTo({           
+            top:0,           
+            behavior:"smooth"         
+          });        
+        
+        };        
+        
+        videos.appendChild(div);      
+      
+      });    
+    
+    });  
+  
+  }  
+    
+  /* 初期表示 */ 
+  searchVideos("人気動画");  
+  
+  </script>  
   </body> 
-  </html>
+　</html> 
